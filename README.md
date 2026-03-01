@@ -79,7 +79,7 @@ python scripts/create_token.py \
 
 ---
 
-## Agent Insider Mode (內盤模式)
+## Agent Insider Mode
 
 > four.meme upcoming feature — only agent wallets can participate in the insider phase before public launch.
 
