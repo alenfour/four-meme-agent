@@ -79,6 +79,104 @@ python scripts/create_token.py \
 
 ---
 
+## Agent Insider Mode (內盤模式)
+
+> four.meme upcoming feature — only agent wallets can participate in the insider phase before public launch.
+
+### What is an Agent Wallet?
+
+A wallet is recognised as an **agent wallet** if it holds on-chain registration via:
+
+| NFT Standard | Contract |
+|---|---|
+| `ERC-8004` | TBD — defined by four.meme |
+| `BAP-578` | TBD — defined by four.meme |
+
+```
+Agent Wallet = address that holds ERC-8004 or BAP-578 NFT on BSC
+```
+
+### Insider Phase Flow
+
+```
+Token Created by Agent Wallet
+         │
+         ▼
+┌─────────────────────────────────┐
+│         INSIDER PHASE           │
+│                                 │
+│  Only agent wallets can buy     │
+│  Bonding curve raises in BNB    │
+│  raisedAmount decreases as      │
+│  insider buys accumulate        │
+└─────────────────┬───────────────┘
+                  │  raise target hit / insider phase ends
+                  ▼
+┌─────────────────────────────────┐
+│         PUBLIC PHASE            │
+│                                 │
+│  All wallets can trade          │
+│  Normal four.meme bonding curve │
+│  DEX graduation as usual        │
+└─────────────────────────────────┘
+```
+
+### Transaction Validation Logic
+
+four.meme validates the **transaction initiator** (not just the `msg.sender`):
+
+```python
+# Pseudocode — four.meme router check
+def is_agent_wallet(address: str) -> bool:
+    return (
+        holds_erc8004_nft(address) or
+        holds_bap578_nft(address)
+    )
+
+def can_trade_insider(tx_origin: str, token: Token) -> bool:
+    if not token.insider_phase_active:
+        return True  # public phase, anyone can trade
+    return is_agent_wallet(tx_origin)
+```
+
+### Third-Party Router Compatibility
+
+Agent wallets **can** still route trades through third-party aggregators (e.g. 1inch, Paraswap) during insider phase:
+
+```
+Agent Wallet ──► Third-Party Router ──► four.meme Pool  ✅
+Regular Wallet ──► Third-Party Router ──► four.meme Pool ❌ (insider phase blocked)
+Regular Wallet ──► four.meme Pool (direct)               ❌ (insider phase blocked)
+```
+
+> four.meme checks `tx.origin`, not `msg.sender` — so routing through aggregators does not bypass the agent check.
+
+### Token Identification Flags (for Explorers / Aggregators)
+
+Tokens launched in agent insider mode expose these features:
+
+| Feature | Description |
+|---|---|
+| Custom tax slot | Separate fee tier for insider vs public phase |
+| `permit` support | Gasless approvals for agent wallet UX |
+| Insider badge | Suggested display: "🤖 Agent Insider" label |
+| Special route hint | Link to official four.meme agent onboarding |
+
+### Integration Recommendation
+
+```
+DO:
+  ✅ Display "Agent Insider Token" badge
+  ✅ Show phase status (INSIDER / PUBLIC)
+  ✅ Allow agent wallet trades via your router
+
+DON'T:
+  ❌ Block or hide agent insider tokens entirely
+  ❌ Treat third-party routed agent trades as suspicious
+```
+
+---
+
 ## four.meme API Flow
 
 ```
