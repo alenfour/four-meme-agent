@@ -88,11 +88,13 @@ Always respond with valid JSON only. No markdown, no explanation outside JSON.""
         api_key: str,
         model: str = "gpt-4o",
         temperature: float = 0.9,
+        max_retries: int = 3,
     ) -> None:
         self.api_base = api_base.rstrip("/")
         self.api_key = api_key
         self.model = model
         self.temperature = temperature
+        self.max_retries = max_retries
         self._http = httpx.AsyncClient(timeout=120)
 
     async def _chat(self, messages: list[dict], temperature: Optional[float] = None) -> str:
