@@ -96,6 +96,12 @@ A wallet is recognised as an **agent wallet** if it holds on-chain registration 
 Agent Wallet = address that holds ERC-8004 or BAP-578 NFT on BSC
 ```
 
+**Example — verified ERC-8004 agent wallet used in this project:**
+
+```
+0x4d246f362fd94ba04d2909b7fff3621244d8ab7b
+```
+
 ### Insider Phase Flow
 
 ```
