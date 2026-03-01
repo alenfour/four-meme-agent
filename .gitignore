@@ -1,0 +1,11 @@
+.env
+*.pyc
+__pycache__/
+.pytest_cache/
+generated_images/
+agent_memory.json
+*.egg-info/
+dist/
+build/
+.venv/
+venv/
