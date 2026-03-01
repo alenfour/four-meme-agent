@@ -38,7 +38,7 @@ class FourMemeClient:
             base_url=BASE_URL,
             timeout=60,
             headers={
-                "User-Agent": "four-meme-agent/1.0",
+                "User-Agent": "four-meme-agent/0.1.0",
                 "Origin": "https://four.meme",
                 "Referer": "https://four.meme/",
             },
