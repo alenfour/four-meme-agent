@@ -7,6 +7,7 @@ from __future__ import annotations
 import asyncio
 import logging
 import random
+import time
 from dataclasses import dataclass
 from typing import Optional
 
@@ -80,13 +81,11 @@ class LaunchStrategy:
         self._launch_timestamps: list[float] = []
 
     def _launches_in_last_hour(self) -> int:
-        import time
         now = time.time()
         self._launch_timestamps = [t for t in self._launch_timestamps if now - t < 3600]
         return len(self._launch_timestamps)
 
     def record_launch(self) -> None:
-        import time
         self._launch_timestamps.append(time.time())
 
     def should_launch_now(self, balance_bnb: float) -> LaunchDecision:
