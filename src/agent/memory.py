@@ -38,6 +38,7 @@ class AgentMemory:
     total_bnb_spent: float = 0.0
     total_gas_spent: int = 0
     successful_launches: int = 0
+    failed_launches: int = 0
     _path: Path = field(default=Path("agent_memory.json"), repr=False)
 
     @classmethod
@@ -52,6 +53,7 @@ class AgentMemory:
                 total_bnb_spent=data.get("total_bnb_spent", 0.0),
                 total_gas_spent=data.get("total_gas_spent", 0),
                 successful_launches=data.get("successful_launches", 0),
+                failed_launches=data.get("failed_launches", 0),
                 _path=p,
             )
             logger.info("Memory loaded: %d past launches", len(launches))
@@ -65,6 +67,7 @@ class AgentMemory:
             "total_bnb_spent": self.total_bnb_spent,
             "total_gas_spent": self.total_gas_spent,
             "successful_launches": self.successful_launches,
+            "failed_launches": self.failed_launches,
             "last_updated": datetime.utcnow().isoformat(),
         }
         self._path.write_text(json.dumps(data, indent=2, ensure_ascii=False), encoding="utf-8")
@@ -107,6 +110,7 @@ class AgentMemory:
         return (
             f"Total launches: {len(self.launches)} | "
             f"Successful: {self.successful_launches} | "
+            f"Failed: {self.failed_launches} | "
             f"BNB spent: {self.total_bnb_spent:.4f} | "
             f"Learnings: {len(self.learnings)}"
         )
